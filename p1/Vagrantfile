@@ -1,0 +1,75 @@
+Vagrant.configure("2") do |config|
+    config.vm.define "Sdmarsell" do |server|
+    server.vm.box = "centos/8"
+        server.vm.hostname = "Sdmarsell"
+        server.vm.network "private_network", ip: "192.168.42.110"
+        server.vm.provider "virtualbox" do |vb|
+            vb.customize [
+                "modifyvm", :id, 
+                "--name", "Sdmarsell"
+                "--natdnsproxy1", "on",
+                "--natdnshostresolver1", "on",
+            ]
+            vb.name = "Sdmarsell"
+            vb.memory = 1024
+            vb.cpus = 1
+        end
+		server.vm.provision "shell" do |sh|
+			if File.file?("#{Dir.home}/.ssh/id_rsa")
+				ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+			else
+				puts "No SSH key found. You will need to remedy this before pushing to the repository."
+			end
+			sh.inline = <<-SHELL
+			if grep -sq "#{ssh_pub_key}" /home/vagrant/.ssh/authorized_keys; then
+			  echo "SSH keys already provisioned."
+			  exit 0;
+			fi
+			echo "SSH key provisioning."
+			mkdir -p /home/vagrant/.ssh/
+			touch /home/vagrant/.ssh/authorized_keys
+			echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+			echo #{ssh_pub_key} > /home/vagrant/.ssh/id_rsa.pub
+			chmod 644 /home/vagrant/.ssh/id_rsa.pub
+			chown -R vagrant:vagrant /home/vagrant
+			exit 0
+		  SHELL
+		end
+    end
+    config.vm.define "SWdmarsell" do |server|
+        server.vm.hostname = "SWdmarsell"
+        server.vm.network "private_network", ip: "192.168.42.111"
+        server.vm.provider "virtualbox" do |vb|
+            vb.customize [
+                "modifyvm", :id, 
+                "--name", "SWdmarsell"
+                "--natdnsproxy1", "on",
+                "--natdnshostresolver1", "on",
+            ]
+            vb.name = "SWdmarsell"
+            vb.memory = 1024
+            vb.cpus = 1
+        end
+		server.vm.provision "shell" do |sh|
+			if File.file?("#{Dir.home}/.ssh/id_rsa")
+				ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+			else
+				puts "No SSH key found. You will need to remedy this before pushing to the repository."
+			end
+			sh.inline = <<-SHELL
+			if grep -sq "#{ssh_pub_key}" /home/vagrant/.ssh/authorized_keys; then
+			  echo "SSH keys already provisioned."
+			  exit 0;
+			fi
+			echo "SSH key provisioning."
+			mkdir -p /home/vagrant/.ssh/
+			touch /home/vagrant/.ssh/authorized_keys
+			echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+			echo #{ssh_pub_key} > /home/vagrant/.ssh/id_rsa.pub
+			chmod 644 /home/vagrant/.ssh/id_rsa.pub
+			chown -R vagrant:vagrant /home/vagrant
+			exit 0
+		  SHELL
+		end
+    end
+end
