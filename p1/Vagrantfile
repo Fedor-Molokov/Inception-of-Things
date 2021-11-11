@@ -19,6 +19,7 @@ Vagrant.configure("2") do |config|
             vb.memory = 1024
             vb.cpus = 1
         end
+
         serverMaster.vm.provision "shell" do |sh|
             if File.file?("#{Dir.home}/.ssh/id_rsa")
                 ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
@@ -41,7 +42,9 @@ Vagrant.configure("2") do |config|
         SHELL
         end
     end
+
     config.vm.define "SWdmarsell" do |serverWorker|
+        serverWorker.vm.box = "centos/8"
         serverWorker.vm.hostname = "SWdmarsell"
         serverWorker.vm.network "private_network", ip: "192.168.42.111"
         serverWorker.vm.provider "virtualbox" do |vb|
@@ -55,6 +58,7 @@ Vagrant.configure("2") do |config|
             vb.memory = 1024
             vb.cpus = 1
         end
+
         serverWorker.vm.provision "shell" do |sh|
             if File.file?("#{Dir.home}/.ssh/id_rsa")
                 ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
@@ -77,7 +81,9 @@ Vagrant.configure("2") do |config|
         SHELL
         end
     end
+
     if Vagrant.has_plugin?("vagrant-vbguest")
         config.vbguest.auto_update = false
     end
+
 end
