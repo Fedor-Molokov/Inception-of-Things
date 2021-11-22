@@ -1,0 +1,29 @@
+users:
+- dmarsell
+- wzei
+- bgerda
+
+kubectl_conf:
+  path:
+    bin:    '/usr/local/bin'
+    script: '/usr/local/scripts'
+  version:              latest
+  latest_url:           'https://storage.googleapis.com/kubernetes-release/release/stable.txt'
+  release_url:          'https://storage.googleapis.com/kubernetes-release/release'
+  install_completion:   true
+  ensure_prerequisites: false
+
+# k3s_server: 
+dmarsellS:
+  docker: true
+  disable:
+    - traefik
+  node-label:
+      - "node=server"
+
+# k3s_agent:
+  dmarsellSW:
+    with-node-id: true
+    node-label:
+      - "node=worker"
+

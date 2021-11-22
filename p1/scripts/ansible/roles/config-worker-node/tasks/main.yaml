@@ -1,0 +1,13 @@
+---
+
+- name: set K3S_TOKEN env
+  shell: echo 'export K3S_TOKEN="{{ hostvars['dmarsellS']['token']['stdout'] }}"' >> /etc/environment
+  become: true
+
+- name: set K3S_URL env
+  shell: echo 'export K3S_URL="https://192.168.42.110:6443"' >> /etc/environment
+  become: true
+
+- name: add worker node
+  shell: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent" sh -
+  become: true

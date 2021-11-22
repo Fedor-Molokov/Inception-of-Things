@@ -1,0 +1,36 @@
+master:
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig ~/.kube/config --write-kubeconfig-mode 666 --tls-san 192.168.42.110 --node-external-ip=192.168.42.110" sh -
+TOKEN=$(sudo cat /var/lib/rancher/k3s/server/node-token)
+
+agent:
+export K3S_TOKEN='K1046e23c0dd793e2d0da4ce9bf671da710c40e81eb8521dfb21bc32c2d73e802d3::server:8099f55aa5ecafb72b17fb8167463f9d'
+export K3S_URL='https://192.168.42.110:6443'
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent" sh -
+
+
+
+
+
+
+
+# curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
+# TOKEN='K1011acc47290d87fffb6fdff27879effed9f5c2bc5d0255ee14756f4c75c3cb3a4::server:3d036231e37760164afa99595f9b5d13'
+# URL='https://192.168.42.110:6443'
+# /usr/local/bin/k3s agent --server ${URL} --token ${TOKEN}
+
+# k3s agent --server ${URL} --token ${TOKEN}
+
+# TOKEN=$(cat /var/lib/rancher/k3s/server/node-token)
+# curl -sfL https://get.k3s.io | K3S_URL=$URL K3S_TOKEN=$TOKEN sh -
+
+
+
+# /usr/local/bin/k3s agent --server ${URL} --token ${TOKEN}
+
+
+
+# export K3S_TOKEN='K103416686f46708152c4ffafaf0dd246c0cb4a91f05b98c41b6f19e5371ae8081f::server:1fadc0c53acb971268c9cd7abcab310d'
+# export K3S_URL='https://192.168.42.110:6443'
+# export INSTALL_K3S_EXEC="--docker --token $K3S_TOKEN --server $K3S_URL"
+# export K3S_NODE_NAME=${HOSTNAME//_/-}
+# curl -sfL https://docs.rancher.cn/k3s/k3s-install.sh | sh -

@@ -1,0 +1,16 @@
+---
+
+- name: create master node
+  shell: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig ~/.kube/config --write-kubeconfig-mode 666 --tls-san 192.168.42.110 --node-external-ip=192.168.42.110" sh -
+
+- name: put master k3s token
+  command: cat /var/lib/rancher/k3s/server/node-token
+  register: token
+  become: true
+
+# - name: Change kubeconfig file permission
+#   file:
+#     path: /etc/rancher/k3s/k3s.yaml
+#     owner: dmarsell
+#     group: admin
+#   become: true
