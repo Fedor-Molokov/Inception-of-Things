@@ -1,0 +1,4 @@
+roles:
+  - xanmanning.k3s
+  # - codecap.kubectl
+  # - andrewrothstein.k3d
