@@ -1,5 +1,5 @@
 ---
-- name: Preconfig nodes
+- name: Config
   hosts: k3s_cluster
   vars:
     k3s_become_for_all: true
@@ -11,4 +11,5 @@
     - role: xanmanning.k3s
       become: true
     - role: k3s-config-permission
+    - role: k8s-deploy
     # - role: end

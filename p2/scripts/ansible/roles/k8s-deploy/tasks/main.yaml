@@ -1,0 +1,99 @@
+---
+- name: Install the latest version of python
+  dnf:
+    name: python3
+    state: latest
+  become: true
+
+- name: update pythons required_plugins
+  command: pip3 install openshift pyyaml kubernetes
+  become: true
+
+# - name: Update python required_plugins
+#   pip:
+#     name: openshift pyyaml kubernetes
+#     executable: pip3
+#   become: true
+
+# - name: Change kubeconfig file permission for vagrant
+#   file:
+#     path: /etc/rancher/k3s/k3s.yaml
+#     owner: "{{ ansible_effective_user_id }}"
+#     group: "{{ ansible_effective_group_id }}"
+#   become: true
+
+- name: Create ingress-nginx namespace
+  k8s:
+    name: ingress-nginx
+    api_version: v1
+    kind: namespace
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+    state: present
+
+- name: Create kubernetes-dashboard namespace
+  k8s:
+    name: kubernetes-dashboard
+    api_version: v1
+    kind: namespace
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+    state: present
+
+- name: Create a Ingress-Nginx from file
+  k8s:
+    state: present
+    definition: "{{ lookup('file', '../../confs/ingress-nginx/ingress-nginx.yaml') | from_yaml_all }}"
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Create a kubernetes-dashboard from file
+  k8s:
+    state: present
+    src: ../confs/kubernetes-dashboard/kubernetes-dashboard.yaml
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Create a kubernetes-dashboard cluster role from file
+  k8s:
+    state: present
+    src: ../confs/kubernetes-dashboard/kubernetes-dashboard-cluster-role.yaml
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Create a kubernetes-dashboard ingress from file
+  k8s:
+    state: present
+    src: ../confs/kubernetes-dashboard/kubernetes-dashboard-ingress.yaml
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Create a webapp postgres database from file
+  k8s:
+    state: present
+    src: ../confs/apps/postgres.yaml
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Create a webapp ui from file
+  k8s:
+    state: present
+    src: ../confs/apps/ui.yaml
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Create a webapp api from file
+  k8s:
+    state: present
+    src: ../confs/apps/api.yaml
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Create a webapp ingress from file
+  k8s:
+    state: present
+    src: ../confs/apps/app-ingress.yaml
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Create a npuzzle app from file
+  k8s:
+    state: present
+    src: ../confs/npuzzle-app/ui-npuzzle.yaml
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Create a npuzzle app ingress from file
+  k8s:
+    state: present
+    src: ../confs/npuzzle-app/npuzzle-ingress.yaml
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"

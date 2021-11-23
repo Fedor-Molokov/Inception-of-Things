@@ -675,27 +675,3 @@ webhooks:
         namespace: "ingress-nginx"
         name: ingress-nginx-controller-admission
         path: /networking/v1/ingresses
-
----
-  apiVersion: networking.k8s.io/v1
-  kind: Ingress
-  metadata:
-    name: example
-    namespace: foo
-  spec:
-    ingressClassName: nginx
-    rules:
-      - host: www.example.com
-        http:
-          paths:
-            - backend:
-                service:
-                  name: exampleService
-                  port:
-                    number: 80
-              path: /
-    # This section is only required if TLS is to be enabled for the Ingress
-    tls:
-      - hosts:
-        - www.example.com
-        secretName: example-tls
