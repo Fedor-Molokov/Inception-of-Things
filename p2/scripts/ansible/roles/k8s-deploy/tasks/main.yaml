@@ -31,9 +31,9 @@
     definition: "{{ lookup('file', '../../confs/ingress-nginx/ingress-nginx.yaml') | from_yaml_all }}"
     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
-- name: Wait for 16 seconds for ingress-nginx deploy
+- name: Wait 120 seconds for ingress-nginx deploy
   wait_for:
-    timeout: 16
+    timeout: 120
 
 - name: Create a kubernetes-dashboard cluster role from file
   k8s:
@@ -46,6 +46,10 @@
     state: present
     definition: "{{ lookup('file', '../../confs/kubernetes-dashboard/kubernetes-dashboard.yaml') | from_yaml_all }}"
     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Wait 10 seconds for kubernetes-dashboard deploy
+  wait_for:
+    timeout: 10
 
 - name: Create a kubernetes-dashboard ingress from file
   k8s:
@@ -63,7 +67,7 @@
     definition: "{{ lookup('file', '../../confs/apps/postgres.yaml') | from_yaml_all }}"
     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
-- name: Wait for 3 seconds for webapp postgres database deploy
+- name: Wait 3 seconds for webapp postgres database deploy
   wait_for:
     timeout: 3
 
