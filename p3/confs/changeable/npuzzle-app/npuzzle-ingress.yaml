@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-ui-npuzzle
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: npuzzle.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ui-npuzzle
+            port:
+              number: 80

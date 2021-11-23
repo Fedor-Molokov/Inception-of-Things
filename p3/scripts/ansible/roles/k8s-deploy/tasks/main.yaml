@@ -1,0 +1,141 @@
+---
+- name: Install the latest version of python
+  dnf:
+    name: python3
+    state: latest
+  become: true
+
+- name: Update python required plugins
+  command: pip3 install openshift pyyaml kubernetes
+  become: true
+
+- name: Create ingress-nginx namespace
+  k8s:
+    name: ingress-nginx
+    api_version: v1
+    kind: namespace
+    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+    state: present
+
+- name: Create argocd namespace
+  k8s:
+    name: argocd
+    api_version: v1
+    kind: namespace
+    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+    state: present
+
+- name: Create kubernetes-dashboard namespace
+  k8s:
+    name: kubernetes-dashboard
+    api_version: v1
+    kind: namespace
+    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+    state: present
+
+- name: Create a Ingress-Nginx from file
+  k8s:
+    state: present
+    definition: "{{ lookup('file', '../../confs/ingress-nginx/ingress-nginx.yaml') | from_yaml_all }}"
+    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Wait 120 seconds for ingress-nginx deploy
+  wait_for:
+    timeout: 120
+
+- name: Create a argocd from file
+  k8s:
+    state: present
+    definition: "{{ lookup('file', '../../confs/argo/argocd.yaml') | from_yaml_all }}"
+    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Wait 20 seconds for argocd deploy
+  wait_for:
+    timeout: 20
+
+- name: Create a argocd ingress from file
+  k8s:
+    state: present
+    definition: "{{ lookup('file', '../../confs/argo/ingress.yaml') | from_yaml_all }}"
+    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+# - name: Create a kubernetes-dashboard cluster role from file
+#   k8s:
+#     state: present
+#     definition: "{{ lookup('file', '../../confs/kubernetes-dashboard/kubernetes-dashboard-cluster-role.yaml') | from_yaml_all }}"
+#     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+# - name: Create a kubernetes-dashboard from file
+#   k8s:
+#     state: present
+#     definition: "{{ lookup('file', '../../confs/kubernetes-dashboard/kubernetes-dashboard.yaml') | from_yaml_all }}"
+#     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+# - name: Wait 10 seconds for kubernetes-dashboard deploy
+#   wait_for:
+#     timeout: 10
+
+# - name: Create a kubernetes-dashboard ingress from file
+#   k8s:
+#     state: present
+#     definition: "{{ lookup('file', '../../confs/kubernetes-dashboard/kubernetes-dashboard-ingress.yaml') | from_yaml_all }}"
+#     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+# - name: Get login token for dashboard
+#   shell: kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | awk '/^admin-user-token-/{print $1}') | awk '$1=="token:"{print $2}'
+#   register: dashboard_token
+
+# - name: Create a webapp postgres database from file
+#   k8s:
+#     state: present
+#     definition: "{{ lookup('file', '../../confs/apps/postgres.yaml') | from_yaml_all }}"
+#     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+# - name: Wait 3 seconds for webapp postgres database deploy
+#   wait_for:
+#     timeout: 3
+
+# - name: Create a webapp ui from file
+#   k8s:
+#     state: present
+#     definition: "{{ lookup('file', '../../confs/apps/ui.yaml') | from_yaml_all }}"
+#     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+# - name: Create a webapp api from file
+#   k8s:
+#     state: present
+#     definition: "{{ lookup('file', '../../confs/apps/api.yaml') | from_yaml_all }}"
+#     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+# - name: Create a webapp ingress from file
+#   k8s:
+#     state: present
+#     definition: "{{ lookup('file', '../../confs/apps/app-ingress.yaml') | from_yaml_all }}"
+#     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+# - name: Create a npuzzle app from file
+#   k8s:
+#     state: present
+#     definition: "{{ lookup('file', '../../confs/npuzzle-app/ui-npuzzle.yaml') | from_yaml_all }}"
+#     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+# - name: Create a npuzzle app ingress from file
+#   k8s:
+#     state: present
+#     definition: "{{ lookup('file', '../../confs/npuzzle-app/npuzzle-ingress.yaml') | from_yaml_all }}"
+#     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: Update /etc/hosts file
+  blockinfile:
+    dest: /etc/hosts
+    content: "{{ lookup('file', '../../confs/hosts/hosts') }}"
+    state: present
+  become: true
+
+- name: Get login token from dashboard
+  ansible.builtin.shell: kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | awk '/^admin-user-token-/{print $1}') | awk '$1=="token:"{print $2}'
+  register: dashboard_token
+
+- name: Show dashboard token
+  debug: 
+    msg: "The dashboard login token is: {{ dashboard_token.stdout_lines[0] }}"

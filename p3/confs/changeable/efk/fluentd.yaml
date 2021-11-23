@@ -1,0 +1,459 @@
+---
+# Source: fluentd/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluentd-forwarder
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: fluentd
+    helm.sh/chart: fluentd-2.0.1
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: forwarder
+---
+# Source: fluentd/templates/aggregator-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-aggregator-cm
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: fluentd
+    helm.sh/chart: fluentd-2.0.1
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: aggregator
+data:
+  fluentd.conf: |
+
+    # Ignore fluentd own events
+    <match fluent.**>
+      @type null
+    </match>
+
+    # TCP input to receive logs from
+    <source>
+      @type forward
+      bind 0.0.0.0
+      port 24224
+    </source>
+
+    # HTTP input for the liveness and readiness probes
+    <source>
+      @type http
+      bind 0.0.0.0
+      port 9880
+    </source>
+
+    # Throw the healthcheck to the standard output instead of forwarding it
+    <match fluentd.healthcheck>
+      @type stdout
+    </match>
+
+    # Send the logs to the standard output
+    <match **>
+      @type stdout
+    </match>
+---
+# Source: fluentd/templates/forwarder-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-forwarder-cm
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: fluentd
+    helm.sh/chart: fluentd-2.0.1
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: forwarder
+data:
+  fluentd.conf: |
+
+    # Ignore fluentd own events
+    <match fluent.**>
+      @type null
+    </match>
+
+    # HTTP input for the liveness and readiness probes
+    <source>
+      @type http
+      port 9880
+    </source>
+
+    # Throw the healthcheck to the standard output instead of forwarding it
+    <match fluentd.healthcheck>
+      @type null
+    </match>
+
+    # Get the logs from the containers running in the node
+    <source>
+      @type tail
+      path /var/log/containers/*-webapp*.log
+      pos_file /opt/bitnami/fluentd/logs/buffers/webapp/fluentd-docker.pos
+      tag kubernetes.*
+      read_from_head true
+      format none
+      time_format %Y-%m-%dT%H:%M:%S.%NZ
+      <filter **>
+        @type parser
+        key_name message
+        <parse>
+          @type multi_format
+          <pattern>
+            format json
+            time_key time
+            keep_time_key true
+          </pattern>
+        </parse>
+      </filter>
+    </source>
+
+    # enrich with kubernetes metadata
+    <filter kubernetes.**>
+        @type kubernetes_metadata
+    </filter>
+
+    <match kubernetes.var.log.containers.**api-webapp**.log>
+      @type elasticsearch
+      include_tag_key true
+      host "elasticsearch-master.kube-system.svc.cluster.local"
+      port "9200"
+      index_name "api-webapp-logs"
+      <buffer>
+        @type file
+        path /opt/bitnami/fluentd/logs/buffers/api-webapp-logs.buffer
+        flush_thread_count 2
+        flush_interval 5s
+      </buffer>
+    </match>
+---
+# Source: fluentd/templates/forwarder-clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fluentd
+  labels:
+    app.kubernetes.io/name: fluentd
+    helm.sh/chart: fluentd-2.0.1
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/managed-by: Helm
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - "namespaces"
+      - "pods"
+    verbs:
+      - "get"
+      - "watch"
+      - "list"
+---
+# Source: fluentd/templates/forwarder-clusterrolebinding.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: fluentd
+  labels:
+    app.kubernetes.io/name: fluentd
+    helm.sh/chart: fluentd-2.0.1
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: fluentd
+subjects:
+  - kind: ServiceAccount
+    name: fluentd-forwarder
+    namespace: kube-system
+---
+# Source: fluentd/templates/aggregator-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluentd-aggregator
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: fluentd
+    helm.sh/chart: fluentd-2.0.1
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: aggregator
+    app: aggregator
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      
+      port: 9880
+      protocol: TCP
+      targetPort: http
+    - name: tcp
+      
+      port: 24224
+      protocol: TCP
+      targetPort: tcp
+  selector:
+    app.kubernetes.io/name: fluentd
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/component: aggregator
+---
+# Source: fluentd/templates/forwarder-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluentd-forwarder
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: fluentd
+    helm.sh/chart: fluentd-2.0.1
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: forwarder
+    app: forwarder
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      
+      port: 9880
+      protocol: TCP
+      targetPort: http
+  selector: 
+    app.kubernetes.io/name: fluentd
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/component: forwarder
+---
+# Source: fluentd/templates/svc-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluentd-headless
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: fluentd
+    helm.sh/chart: fluentd-2.0.1
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: aggregator
+    app: aggregator
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: http
+      
+      port: 9880
+      protocol: TCP
+      targetPort: http
+    - name: tcp
+      
+      port: 24224
+      protocol: TCP
+      targetPort: tcp
+  selector:
+    app.kubernetes.io/name: fluentd
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/component: aggregator
+---
+# Source: fluentd/templates/forwarder-daemonset.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: fluentd
+    helm.sh/chart: fluentd-2.0.1
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: forwarder
+    ## Istio Labels: https://istio.io/docs/ops/deployment/requirements/
+    app: forwarder
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fluentd
+      app.kubernetes.io/instance: fluentd
+      app.kubernetes.io/component: forwarder
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fluentd
+        helm.sh/chart: fluentd-2.0.1
+        app.kubernetes.io/instance: fluentd
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: forwarder
+        app: forwarder
+      annotations:
+        checksum/config: d89c152558c1e8d8eb95fe1482217cbceb2bb7bab25856381ba2854baff78528
+    spec:
+      serviceAccountName: fluentd-forwarder
+      priorityClassName: 
+      securityContext:
+        runAsUser: 0
+        fsGroup: 0
+      containers:
+        - name: fluentd
+          image: docker.io/bitnami/fluentd:1.11.2-debian-10-r18
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: FLUENTD_CONF
+              value: fluentd.conf
+            - name: FLUENTD_OPT
+            - name: FLUENTD_DAEMON_USER
+              value: "root"
+            - name: FLUENTD_DAEMON_GROUP
+              value: "root"
+          ports:
+            - containerPort: 9880
+              name: http
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /fluentd.healthcheck?json=%7B%22ping%22%3A+%22pong%22%7D
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /fluentd.healthcheck?json=%7B%22ping%22%3A+%22pong%22%7D
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - name: fluentd-config
+              mountPath: /opt/bitnami/fluentd/conf
+            - name: buffer
+              mountPath: /opt/bitnami/fluentd/logs/buffers
+            - name: varlog
+              mountPath: /var/log
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+      volumes:
+        - name: fluentd-config
+          configMap:
+            name: fluentd-forwarder-cm
+        - name: buffer
+          emptyDir: {}
+        - name: varlog
+          hostPath:
+            path: /var/log
+            type: ''
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
+            type: ''
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+---
+# Source: fluentd/templates/aggregator-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fluentd
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: fluentd
+    helm.sh/chart: fluentd-2.0.1
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: aggregator
+    ## Istio Labels: https://istio.io/docs/ops/deployment/requirements/
+    app: aggregator
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fluentd
+      app.kubernetes.io/instance: fluentd
+      app.kubernetes.io/component: aggregator
+  serviceName: fluentd-headless
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fluentd
+        helm.sh/chart: fluentd-2.0.1
+        app.kubernetes.io/instance: fluentd
+        app.kubernetes.io/component: aggregator
+        app: aggregator
+      annotations:
+        checksum/config: 272a1dd0210a7b533084dc76ba54689b8ba25043084ae7530d7ea832cd9e2c01
+    spec:
+      restartPolicy: Always
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccount: default
+      schedulerName: default-scheduler
+      securityContext:
+        runAsUser: 1001
+        fsGroup: 1001
+      containers:
+        - name: fluentd
+          image: docker.io/bitnami/fluentd:1.11.2-debian-10-r18
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: FLUENTD_CONF
+              value: fluentd.conf
+            - name: FLUENTD_OPT
+          ports:
+            - name: tcp
+              containerPort: 24224
+              protocol: TCP
+            - containerPort: 9880
+              name: http
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /fluentd.healthcheck?json=%7B%22ping%22%3A+%22pong%22%7D
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /fluentd.healthcheck?json=%7B%22ping%22%3A+%22pong%22%7D
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          resources: {}
+          volumeMounts:
+            - name: fluentd-config
+              mountPath: /opt/bitnami/fluentd/conf
+            - name: buffer
+              mountPath: /opt/bitnami/fluentd/logs/buffers
+      volumes:
+        - name: fluentd-config
+          configMap:
+            name: fluentd-aggregator-cm
+            defaultMode: 420
+        - name: buffer
+          emptyDir: {}
