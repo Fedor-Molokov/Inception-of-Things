@@ -61,6 +61,13 @@
   shell: kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | awk '/^admin-user-token-/{print $1}') | awk '$1=="token:"{print $2}'
   register: dashboard_token
 
+- name: Show dashboard token
+  debug: 
+    msg: "The dashboard login token is: {{ dashboard_token.stdout_lines[0] }}"
+
+- name: Pause until you can entry into kubernetes-dashboard
+  pause:
+
 - name: Create a webapp postgres database from file
   k8s:
     state: present

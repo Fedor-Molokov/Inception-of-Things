@@ -4,19 +4,18 @@ metadata:
   name: webapp-argo-application
   namespace: argocd
 spec:
-  project: default
+  project: p3
 
   source:
-    repoURL: https://github.com/Fedor-Molokov/testargo.git
+    repoURL: https://github.com/Fedor-Molokov/IoT.git
     targetRevision: HEAD
-    path: k8s/manifests/changeable/apps
+    path: p3/confs/changeable/apps
   destination: 
     server: https://kubernetes.default.svc
-    namespace: webapp-and-others
 
   syncPolicy:
     syncOptions:
-    - CreateNamespace=true
+    - CreateNamespace=false
 
     automated:
       selfHeal: true

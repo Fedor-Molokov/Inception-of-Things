@@ -1,22 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: utilization-argo-application
+  name: webapp-argo-application
   namespace: argocd
 spec:
-  project: default
+  project: p3
 
   source:
-    repoURL: https://github.com/Fedor-Molokov/testargo.git
+    repoURL: https://github.com/Fedor-Molokov/IoT.git
     targetRevision: HEAD
-    path: k8s/manifests/changeable/utilization
+    path: p3/confs/changeable/npuzzle-app
   destination: 
     server: https://kubernetes.default.svc
-    namespace: webapp-and-others
 
   syncPolicy:
     syncOptions:
-    - CreateNamespace=true
+    - CreateNamespace=false
 
     automated:
       selfHeal: true
