@@ -1,0 +1,10 @@
+galaxy_info:
+  author: Fedor Molokov
+  description: Make users, admin and docker groups, and upgrade machine.
+  license: MIT
+  min_ansible_version: 2.1
+  platforms:
+    - name: CentOS
+      versions:
+        - 8
+dependencies: []

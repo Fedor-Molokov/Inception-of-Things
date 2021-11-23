@@ -1,0 +1,6 @@
+---
+- name: End
+  block:
+    - name: Reboot block
+      reboot:
+  become: true

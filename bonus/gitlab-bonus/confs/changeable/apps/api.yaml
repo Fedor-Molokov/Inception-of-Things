@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webapp
+    tier: api
+  name: api-webapp
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+      tier: api
+  template:
+    metadata:
+      labels:
+        app: webapp
+        tier: api
+    spec:
+      containers:
+      - image: dmarsell/go-web-api:kuber-go-stable
+        name: api
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: webapp
+    tier: api
+  name: go-web-api
+  namespace: dev
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: webapp
+    tier: api

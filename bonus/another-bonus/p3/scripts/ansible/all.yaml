@@ -1,0 +1,12 @@
+---
+- name: All configs
+  hosts: IoT-server
+  roles:
+    - role: preconfig
+    - role: docker-install
+    - role: codecap.kubectl
+      become: true
+    - role: andrewrothstein.k3d
+    - role: reboot
+    - role: k3d-config
+    - role: k8s-deploy

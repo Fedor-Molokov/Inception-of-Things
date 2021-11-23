@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webapp
+    tier: ui
+  name: ui-webapp
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+      tier: ui
+  template:
+    metadata:
+      labels:
+        app: webapp
+        tier: ui
+    spec:
+      containers:
+      - name: ui
+        image: dmarsell/web-ui:kuber-go-stable
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: webapp
+    tier: ui
+  name: ui
+  namespace: dev
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: webapp
+    tier: ui
