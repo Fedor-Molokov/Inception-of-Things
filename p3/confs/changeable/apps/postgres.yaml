@@ -6,6 +6,7 @@ metadata:
     app: webapp
     tier: database
   name: postgres
+  namespace: dev
 spec:
   replicas: 1
   selector:
@@ -33,6 +34,7 @@ metadata:
     app: webapp
     tier: database
   name: postgres
+  namespace: dev
 spec:
   ports:
   - port: 5432

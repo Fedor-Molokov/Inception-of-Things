@@ -16,63 +16,57 @@
     state: present
   become: true
 
-- name: Create ingress-nginx namespace
-  k8s:
-    name: ingress-nginx
-    api_version: v1
-    kind: namespace
-    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
-    state: present
+# - name: Create ingress-nginx namespace
+#   k8s:
+#     name: ingress-nginx
+#     api_version: v1
+#     kind: namespace
+#     state: present
 
-- name: Create argocd namespace
-  k8s:
-    name: argocd
-    api_version: v1
-    kind: namespace
-    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
-    state: present
+# - name: Create argocd namespace
+#   k8s:
+#     name: argocd
+#     api_version: v1
+#     kind: namespace
+#     state: present
 
-- name: Create kubernetes-dashboard namespace
-  k8s:
-    name: kubernetes-dashboard
-    api_version: v1
-    kind: namespace
-    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
-    state: present
+# - name: Create kubernetes-dashboard namespace
+#   k8s:
+#     name: kubernetes-dashboard
+#     api_version: v1
+#     kind: namespace
+#     state: present
 
-- name: Create a Ingress-Nginx from file
-  k8s:
-    state: present
-    definition: "{{ lookup('file', '../../confs/ingress-nginx/ingress-nginx.yaml') | from_yaml_all }}"
-    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+# - name: Create a Ingress-Nginx from file
+#   k8s:
+#     state: present
+#     definition: "{{ lookup('file', '../../confs/ingress-nginx/ingress-nginx.yaml') | from_yaml_all }}"
 
-- name: Wait 120 seconds for ingress-nginx deploy
-  wait_for:
-    timeout: 120
+# - name: Wait 120 seconds for ingress-nginx deploy
+#   wait_for:
+#     timeout: 120
 
-- name: Create an argocd from file
-  k8s:
-    state: present
-    definition: "{{ lookup('file', '../../confs/argo/argocd.yaml') | from_yaml_all }}"
-    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+# - name: Create an argocd from file
+#   k8s:
+#     state: present
+#     definition: "{{ lookup('file', '../../confs/argo/argocd.yaml') | from_yaml_all }}"
 
-- name: Wait 20 seconds for argocd deploy
-  wait_for:
-    timeout: 20
+# - name: Wait 20 seconds for argocd deploy
+#   wait_for:
+#     timeout: 20
 
-- name: Create a argocd ingress from file
-  k8s:
-    state: present
-    definition: "{{ lookup('file', '../../confs/argo/ingress.yaml') | from_yaml_all }}"
-    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+# - name: Create a argocd ingress from file
+#   k8s:
+#     state: present
+#     definition: "{{ lookup('file', '../../confs/argo/ingress.yaml') | from_yaml_all }}"
 
 - name: Get login token from argocd
-  ansible.builtin.shell: kubectl -n argocd describe secret $(kubectl -n argocd get secret | awk '/^argocd-initial-admin-secret-/{print $1}') | awk '$1=="token:"{print $2}'
+  ansible.builtin.shell: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode && echo
   register: argocd_token
 
 - name: Show argocd token
   debug: 
-    msg: "The argocd login token is: {{ argocd_token.stdout_lines[0] }}"
+    msg: "The argocd login token is: {{ argocd_token.stdout }}"
 
 - name: Press enter when you entried into argocd dashboard
   pause:
@@ -81,7 +75,6 @@
   k8s:
     state: present
     definition: "{{ lookup('file', '../../confs/argo/application-k8s-dashboard.yaml') | from_yaml_all }}"
-    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
 - name: Press enter when kubernetes-dashboard is complete deploied
   pause:
@@ -101,7 +94,6 @@
   k8s:
     state: present
     definition: "{{ lookup('file', '../../confs/argo/application-efk.yaml') | from_yaml_all }}"
-    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
 - name: Press enter when EFK is complete deploied
   pause:
@@ -110,19 +102,21 @@
   k8s:
     state: present
     definition: "{{ lookup('file', '../../confs/argo/application-prometheus.yaml') | from_yaml_all }}"
-    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
 - name: Create an argocd application for grafana
   k8s:
     state: present
     definition: "{{ lookup('file', '../../confs/argo/application-grafana.yaml') | from_yaml_all }}"
-    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
 - name: Press enter when grafana is fully configured
   pause:
+
+- name: Create an argocd application for webapp
+  k8s:
+    state: present
+    definition: "{{ lookup('file', '../../confs/argo/application-webapp.yaml') | from_yaml_all }}"
 
 - name: Create an argocd application for npuzzle-app
   k8s:
     state: present
     definition: "{{ lookup('file', '../../confs/argo/application-npuzzle-app.yaml') | from_yaml_all }}"
-    # kubeconfig: "/etc/rancher/k3s/k3s.yaml"

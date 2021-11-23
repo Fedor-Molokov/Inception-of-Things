@@ -4,7 +4,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kibana-kibana
-  namespace: kube-system
+  namespace: dev
   labels: 
     app: kibana
     release: "kibana"
@@ -25,7 +25,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kibana-kibana
-  namespace: kube-system
+  namespace: dev
   labels: 
     app: kibana
     release: "kibana"

@@ -1,7 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-webapp
+  name: grafana-ingress
+  namespace: dev
 spec:
   ingressClassName: nginx
   rules:

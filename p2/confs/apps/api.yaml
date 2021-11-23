@@ -6,7 +6,7 @@ metadata:
     app: webapp
     tier: api
   name: api-webapp
-  namespace: default
+  namespace: kube-system
 spec:
   replicas: 1
   selector:
@@ -31,7 +31,7 @@ metadata:
     app: webapp
     tier: api
   name: go-web-api
-  namespace: default
+  namespace: kube-system
 spec:
   ports:
   - port: 8080

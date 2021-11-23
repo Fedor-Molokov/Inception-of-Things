@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: prometheus
   name: prometheus-kube-state-metrics
-  namespace: kube-system
+  namespace: dev
 imagePullSecrets:
   []
 ---
@@ -24,7 +24,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-alertmanager
-  namespace: kube-system
+  namespace: dev
   annotations:
     {}
 ---
@@ -39,7 +39,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-node-exporter
-  namespace: kube-system
+  namespace: dev
   annotations:
     {}
 ---
@@ -54,7 +54,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-pushgateway
-  namespace: kube-system
+  namespace: dev
   annotations:
     {}
 ---
@@ -69,7 +69,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-server
-  namespace: kube-system
+  namespace: dev
   annotations:
     {}
 ---
@@ -84,7 +84,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-alertmanager
-  namespace: kube-system
+  namespace: dev
 data:
   alertmanager.yml: |
     global: {}
@@ -107,7 +107,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-server
-  namespace: kube-system
+  namespace: dev
 data:
   alerting_rules.yml: |
     {}
@@ -427,7 +427,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-alertmanager
-  namespace: kube-system
+  namespace: dev
 spec:
   accessModes:
     - ReadWriteOnce
@@ -446,7 +446,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-server
-  namespace: kube-system
+  namespace: dev
 spec:
   accessModes:
     - ReadWriteOnce
@@ -688,7 +688,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: prometheus-kube-state-metrics
-  namespace: kube-system
+  namespace: dev
 ---
 # Source: prometheus/templates/alertmanager/clusterrolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -704,7 +704,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: prometheus-alertmanager
-    namespace: kube-system
+    namespace: dev
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -724,7 +724,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: prometheus-pushgateway
-    namespace: kube-system
+    namespace: dev
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -744,7 +744,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: prometheus-server
-    namespace: kube-system
+    namespace: dev
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -755,7 +755,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: prometheus-kube-state-metrics
-  namespace: kube-system
+  namespace: dev
   labels:
     app.kubernetes.io/name: kube-state-metrics
     helm.sh/chart: "kube-state-metrics-3.5.2"
@@ -786,7 +786,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-alertmanager
-  namespace: kube-system
+  namespace: dev
 spec:
   ports:
     - name: http
@@ -813,7 +813,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-node-exporter
-  namespace: kube-system
+  namespace: dev
 spec:
   clusterIP: None
   ports:
@@ -840,7 +840,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-pushgateway
-  namespace: kube-system
+  namespace: dev
 spec:
   ports:
     - name: http
@@ -864,7 +864,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-server
-  namespace: kube-system
+  namespace: dev
 spec:
   ports:
     - name: http
@@ -889,7 +889,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-node-exporter
-  namespace: kube-system
+  namespace: dev
 spec:
   selector:
     matchLabels:
@@ -957,7 +957,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus-kube-state-metrics
-  namespace: kube-system
+  namespace: dev
   labels:
     app.kubernetes.io/name: kube-state-metrics
     helm.sh/chart: "kube-state-metrics-3.5.2"
@@ -1015,7 +1015,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-alertmanager
-  namespace: kube-system
+  namespace: dev
 spec:
   selector:
     matchLabels:
@@ -1101,7 +1101,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-pushgateway
-  namespace: kube-system
+  namespace: dev
 spec:
   selector:
     matchLabels:
@@ -1155,7 +1155,7 @@ metadata:
     chart: prometheus-14.11.1
     heritage: Helm
   name: prometheus-server
-  namespace: kube-system
+  namespace: dev
 spec:
   selector:
     matchLabels:

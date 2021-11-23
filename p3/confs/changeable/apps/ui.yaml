@@ -6,6 +6,7 @@ metadata:
     app: webapp
     tier: ui
   name: ui-webapp
+  namespace: dev
 spec:
   replicas: 1
   selector:
@@ -30,6 +31,7 @@ metadata:
     app: webapp
     tier: ui
   name: ui
+  namespace: dev
 spec:
   ports:
   - port: 80

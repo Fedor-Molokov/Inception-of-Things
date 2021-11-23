@@ -6,7 +6,7 @@ metadata:
     app: webapp
     tier: database
   name: postgres
-  namespace: default
+  namespace: kube-system
 spec:
   replicas: 1
   selector:
@@ -34,7 +34,7 @@ metadata:
     app: webapp
     tier: database
   name: postgres
-  namespace: default
+  namespace: kube-system
 spec:
   ports:
   - port: 5432

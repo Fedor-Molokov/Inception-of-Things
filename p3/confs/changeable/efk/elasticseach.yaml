@@ -4,7 +4,7 @@
 # kind: Pod
 # metadata:
 #   name: "elastic-quhou-test"
-#   namespace: kube-system
+#   namespace: dev
 #   annotations:
 #     "helm.sh/hook": test
 #     "helm.sh/hook-delete-policy": hook-succeeded
@@ -30,7 +30,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: "elasticsearch-master-pdb"
-  namespace: kube-system
+  namespace: dev
 spec:
   maxUnavailable: 1
   selector:
@@ -42,7 +42,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: elasticsearch-master
-  namespace: kube-system
+  namespace: dev
   labels:
     heritage: "Helm"
     release: "elastic"
@@ -69,6 +69,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: elasticsearch-master-headless
+  namespace: dev
   labels:
     heritage: "Helm"
     release: "elastic"
@@ -93,7 +94,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: elasticsearch-master
-  namespace: kube-system
+  namespace: dev
   labels:
     heritage: "Helm"
     release: "elastic"

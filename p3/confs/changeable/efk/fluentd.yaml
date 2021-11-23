@@ -4,7 +4,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: fluentd-forwarder
-  namespace: kube-system
+  namespace: dev
   labels:
     app.kubernetes.io/name: fluentd
     helm.sh/chart: fluentd-2.0.1
@@ -17,7 +17,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: fluentd-aggregator-cm
-  namespace: kube-system
+  namespace: dev
   labels:
     app.kubernetes.io/name: fluentd
     helm.sh/chart: fluentd-2.0.1
@@ -61,7 +61,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: fluentd-forwarder-cm
-  namespace: kube-system
+  namespace: dev
   labels:
     app.kubernetes.io/name: fluentd
     helm.sh/chart: fluentd-2.0.1
@@ -167,14 +167,14 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: fluentd-forwarder
-    namespace: kube-system
+    namespace: dev
 ---
 # Source: fluentd/templates/aggregator-svc.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: fluentd-aggregator
-  namespace: kube-system
+  namespace: dev
   labels:
     app.kubernetes.io/name: fluentd
     helm.sh/chart: fluentd-2.0.1
@@ -205,7 +205,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: fluentd-forwarder
-  namespace: kube-system
+  namespace: dev
   labels:
     app.kubernetes.io/name: fluentd
     helm.sh/chart: fluentd-2.0.1
@@ -231,7 +231,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: fluentd-headless
-  namespace: kube-system
+  namespace: dev
   labels:
     app.kubernetes.io/name: fluentd
     helm.sh/chart: fluentd-2.0.1
@@ -263,7 +263,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluentd
-  namespace: kube-system
+  namespace: dev
   labels:
     app.kubernetes.io/name: fluentd
     helm.sh/chart: fluentd-2.0.1
@@ -370,7 +370,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: fluentd
-  namespace: kube-system
+  namespace: dev
   labels:
     app.kubernetes.io/name: fluentd
     helm.sh/chart: fluentd-2.0.1
