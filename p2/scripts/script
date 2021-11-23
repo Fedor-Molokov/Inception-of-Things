@@ -1,11 +1,28 @@
 
 # curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig ~/.kube/config --write-kubeconfig-mode 666 --tls-san 192.168.42.110 --node-external-ip=192.168.42.110" sh -
 
+
+# curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--no-deploy traefik" sh -s -
+
+
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 chmod 700 get_helm.sh
 ./get_helm.sh
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
 
-
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.4.0/aio/deploy/recommended.yaml
 kubectl apply -f https://raw.githubusercontent.com/arptra/k3d-manifests/master/dashboard_cluster_role.yaml
+
+
+# helm repo add nginx-stable https://helm.nginx.com/stable
+
+helm upgrade --install ingress-nginx ingress-nginx \
+  --repo https://kubernetes.github.io/ingress-nginx \
+  --namespace ingress-nginx --create-namespace
+
+
+kubectl apply -f https://raw.githubusercontent.com/Fedor-Molokov/User-Database-App-Golang/kuber/k8s/manifests/changeable/apps/postgres.yaml
+kubectl apply -f https://raw.githubusercontent.com/Fedor-Molokov/User-Database-App-Golang/kuber/k8s/manifests/changeable/apps/ui.yaml
+kubectl apply -f https://raw.githubusercontent.com/Fedor-Molokov/User-Database-App-Golang/kuber/k8s/manifests/changeable/apps/api.yaml
+kubectl apply -f https://raw.githubusercontent.com/Fedor-Molokov/User-Database-App-Golang/kuber/k8s/manifests/changeable/apps/ingress-webapp.yaml

@@ -13,3 +13,8 @@ kubectl_conf:
   install_completion:   true
   ensure_prerequisites: false
 
+k3s_server:
+  disable:
+    - traefik
+
+
