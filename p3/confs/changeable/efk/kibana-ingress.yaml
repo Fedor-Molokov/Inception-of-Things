@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: ingress-webapp
 spec:
+  ingressClassName: nginx
   rules:
   - host: kibana.me
     http:

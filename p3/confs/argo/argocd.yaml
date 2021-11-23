@@ -12,7 +12,6 @@ items:
       app.kubernetes.io/name: applications.argoproj.io
       app.kubernetes.io/part-of: argocd
     name: applications.argoproj.io
-    resourceVersion: "2202"
     uid: 4707f792-27f3-4727-8a3e-41492721fbbf
   spec:
     conversion:
@@ -2298,7 +2297,6 @@ items:
       app.kubernetes.io/name: appprojects.argoproj.io
       app.kubernetes.io/part-of: argocd
     name: appprojects.argoproj.io
-    resourceVersion: "2203"
     uid: 4a018d6e-b7e8-4508-8ae5-aec07f9413ee
   spec:
     conversion:
@@ -2797,7 +2795,6 @@ items:
       app.kubernetes.io/name: argocd-application-controller
       app.kubernetes.io/part-of: argocd
     name: argocd-application-controller
-    resourceVersion: "2204"
     uid: f3bda9c1-241d-4620-a870-2248ff4e4ba6
   rules:
   - apiGroups:
@@ -2822,7 +2819,6 @@ items:
       app.kubernetes.io/name: argocd-server
       app.kubernetes.io/part-of: argocd
     name: argocd-server
-    resourceVersion: "2205"
     uid: d9975a5e-c7a4-43e4-8b70-c4e697a10b37
   rules:
   - apiGroups:
@@ -2934,7 +2930,6 @@ items:
       app.kubernetes.io/name: argocd-application-controller
       app.kubernetes.io/part-of: argocd
     name: argocd-application-controller
-    resourceVersion: "2206"
     uid: 2c56a3a4-7cf7-41e7-8677-6273171011e6
   roleRef:
     apiGroup: rbac.authorization.k8s.io
@@ -2956,7 +2951,6 @@ items:
       app.kubernetes.io/name: argocd-server
       app.kubernetes.io/part-of: argocd
     name: argocd-server
-    resourceVersion: "2207"
     uid: 4f5aec87-a2d1-4d5b-871d-da4e341ceeba
   roleRef:
     apiGroup: rbac.authorization.k8s.io
