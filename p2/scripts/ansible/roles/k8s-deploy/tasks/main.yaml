@@ -47,53 +47,60 @@
 - name: Create a kubernetes-dashboard from file
   k8s:
     state: present
-    src: ../confs/kubernetes-dashboard/kubernetes-dashboard.yaml
+    definition: "{{ lookup('file', '../../confs/kubernetes-dashboard/kubernetes-dashboard.yaml') | from_yaml_all }}"
     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
 - name: Create a kubernetes-dashboard cluster role from file
   k8s:
     state: present
-    src: ../confs/kubernetes-dashboard/kubernetes-dashboard-cluster-role.yaml
+    definition: "{{ lookup('file', '../../confs/kubernetes-dashboard/kubernetes-dashboard-cluster-role.yaml') | from_yaml_all }}"
     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
 - name: Create a kubernetes-dashboard ingress from file
   k8s:
     state: present
-    src: ../confs/kubernetes-dashboard/kubernetes-dashboard-ingress.yaml
+    definition: "{{ lookup('file', '../../confs/kubernetes-dashboard/kubernetes-dashboard-ingress.yaml') | from_yaml_all }}"
     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
 - name: Create a webapp postgres database from file
   k8s:
     state: present
-    src: ../confs/apps/postgres.yaml
+    definition: "{{ lookup('file', '../../confs/apps/postgres.yaml') | from_yaml_all }}"
     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
 - name: Create a webapp ui from file
   k8s:
     state: present
-    src: ../confs/apps/ui.yaml
+    definition: "{{ lookup('file', '../../confs/apps/ui.yaml') | from_yaml_all }}"
     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
 - name: Create a webapp api from file
   k8s:
     state: present
-    src: ../confs/apps/api.yaml
+    definition: "{{ lookup('file', '../../confs/apps/api.yaml') | from_yaml_all }}"
     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
 - name: Create a webapp ingress from file
   k8s:
     state: present
-    src: ../confs/apps/app-ingress.yaml
+    definition: "{{ lookup('file', '../../confs/apps/app-ingress.yaml') | from_yaml_all }}"
     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
 - name: Create a npuzzle app from file
   k8s:
     state: present
-    src: ../confs/npuzzle-app/ui-npuzzle.yaml
+    definition: "{{ lookup('file', '../../confs/npuzzle-app/ui-npuzzle.yaml') | from_yaml_all }}"
     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
 
 - name: Create a npuzzle app ingress from file
   k8s:
     state: present
-    src: ../confs/npuzzle-app/npuzzle-ingress.yaml
+    definition: "{{ lookup('file', '../../confs/npuzzle-app/npuzzle-ingress.yaml') | from_yaml_all }}"
     kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+- name: update /etc/hosts file
+  blockinfile:
+    dest: /etc/hosts
+    content: "{{ lookup('file', '../../confs/hosts/hosts') }}"
+    state: present
+  become: true
