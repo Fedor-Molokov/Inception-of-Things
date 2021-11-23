@@ -21,8 +21,19 @@ helm upgrade --install ingress-nginx ingress-nginx \
   --repo https://kubernetes.github.io/ingress-nginx \
   --namespace ingress-nginx --create-namespace
 
+    # metadata:                                          
+    #   creationTimestamp: null                                                                                                                     
+    #   labels:                                          
+    #     k8s-app: kubernetes-dashboard                                                                                                             
+    # spec:                                  
+    #   containers:                                      
+    #   - args:                                                                                                                                     
+    #     --enable-skip-login
+    #     --disable-settings-authorizer
+    #     --enable-insecure-login
+    #     --insecure-bind-address=0.0.0.0
+
 
 kubectl apply -f https://raw.githubusercontent.com/Fedor-Molokov/User-Database-App-Golang/kuber/k8s/manifests/changeable/apps/postgres.yaml
 kubectl apply -f https://raw.githubusercontent.com/Fedor-Molokov/User-Database-App-Golang/kuber/k8s/manifests/changeable/apps/ui.yaml
 kubectl apply -f https://raw.githubusercontent.com/Fedor-Molokov/User-Database-App-Golang/kuber/k8s/manifests/changeable/apps/api.yaml
-kubectl apply -f https://raw.githubusercontent.com/Fedor-Molokov/User-Database-App-Golang/kuber/k8s/manifests/changeable/apps/ingress-webapp.yaml
