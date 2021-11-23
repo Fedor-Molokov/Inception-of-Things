@@ -4,12 +4,12 @@ metadata:
   name: efk-argo-application
   namespace: argocd
 spec:
-  project: p3
+  project: default
 
   source:
     repoURL: https://github.com/Fedor-Molokov/IoT.git
     targetRevision: HEAD
-    path: p3/confs/changeable/efk
+    path: p3/confs/changeable/efk/
   destination: 
     server: https://kubernetes.default.svc
 
