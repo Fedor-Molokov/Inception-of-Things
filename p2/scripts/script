@@ -37,3 +37,11 @@ helm upgrade --install ingress-nginx ingress-nginx \
 kubectl apply -f https://raw.githubusercontent.com/Fedor-Molokov/User-Database-App-Golang/kuber/k8s/manifests/changeable/apps/postgres.yaml
 kubectl apply -f https://raw.githubusercontent.com/Fedor-Molokov/User-Database-App-Golang/kuber/k8s/manifests/changeable/apps/ui.yaml
 kubectl apply -f https://raw.githubusercontent.com/Fedor-Molokov/User-Database-App-Golang/kuber/k8s/manifests/changeable/apps/api.yaml
+
+
+---
+
+kubectl create namespace ingress-nginx
+kubectl create ns kubernetes-dashboard
+
+echo "127.0.0.1 app2.com app1.com" >> /etc/hosts
