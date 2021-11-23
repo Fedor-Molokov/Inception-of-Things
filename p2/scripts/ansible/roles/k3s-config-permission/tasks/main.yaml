@@ -1,5 +1,5 @@
 ---
-- name: Change kubeconfig file permission for vagrant
+- name: Change kubeconfig file permission
   file:
     path: /etc/rancher/k3s/k3s.yaml
     owner: "{{ ansible_effective_user_id }}"
