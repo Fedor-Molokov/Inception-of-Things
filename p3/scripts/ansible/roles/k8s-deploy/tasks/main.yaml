@@ -58,9 +58,9 @@
     state: present
     definition: "{{ lookup('file', '../../confs/argo/argocd.yaml') | from_yaml_all }}"
 
-- name: Wait 100 seconds for argocd deploy
+- name: Wait 150 seconds for argocd deploy
   wait_for:
-    timeout: 100
+    timeout: 150
 
 - name: Create a argocd ingress from file
   k8s:
