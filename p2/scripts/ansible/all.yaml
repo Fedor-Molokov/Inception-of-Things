@@ -5,11 +5,7 @@
     k3s_become_for_all: true
   roles:
     - role: preconfig
-    # - role: docker-install
-    # - role: codecap.kubectl
-    #   become: true
     - role: xanmanning.k3s
       become: true
     - role: k3s-config-permission
     - role: k8s-deploy
-    # - role: end

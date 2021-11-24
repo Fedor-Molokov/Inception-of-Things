@@ -114,7 +114,3 @@
     content: "{{ lookup('file', '../../confs/hosts/hosts') }}"
     state: present
   become: true
-
-- name: Show dashboard token
-  debug: 
-    msg: "The dashboard login token is: {{ dashboard_token.stdout_lines[0] }}"

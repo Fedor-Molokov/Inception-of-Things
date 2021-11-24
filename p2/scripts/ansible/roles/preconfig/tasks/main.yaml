@@ -2,17 +2,6 @@
 - name: Preconfig block
   block:
 
-    # - name: Make sure we have a 'docker' group
-    #   group:
-    #     name: docker
-    #     state: present
-    
-    # - name: Add ansible_user to docker group
-    #   user:
-    #     name: vagrant
-    #     groups: docker
-    #     append: true
-
     - name: Make sure we have a 'admin' group
       group:
         name: admin
@@ -45,28 +34,6 @@
       command: chage -d 0 "{{ item }}"
       when: change.changed
       with_items: "{{ users }}"
-
-    # - name: Add users to docker group
-    #   user:
-    #     name: "{{ item }}"
-    #     groups: docker
-    #     append: true
-    #   with_items: "{{ users }}"
-
-    # - name: Install yum utils
-    #   yum:
-    #     name: yum-utils
-    #     state: latest
-
-    # - name: Install device-mapper-persistent-data
-    #   yum:
-    #     name: device-mapper-persistent-data
-    #     state: latest
-
-    # - name: Install lvm2
-    #   yum:
-    #     name: lvm2
-    #     state: latest
       
   become: true
   when: ansible_facts['distribution'] == 'CentOS'

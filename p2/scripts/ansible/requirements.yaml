@@ -1,5 +1,2 @@
 roles:
   - xanmanning.k3s
-  # - alikins.top_geerlingguy
-  # - codecap.kubectl
-  # - andrewrothstein.k3d
