@@ -90,27 +90,6 @@
 - name: Press enter when you entried into kubernetes-dashboard
   pause:
 
-- name: Create an argocd application for EFK
-  k8s:
-    state: present
-    definition: "{{ lookup('file', '../../confs/argo/application-efk.yaml') | from_yaml_all }}"
-
-- name: Press enter when EFK is complete deploied
-  pause:
-
-- name: Create an argocd application for prometheus
-  k8s:
-    state: present
-    definition: "{{ lookup('file', '../../confs/argo/application-prometheus.yaml') | from_yaml_all }}"
-
-- name: Create an argocd application for grafana
-  k8s:
-    state: present
-    definition: "{{ lookup('file', '../../confs/argo/application-grafana.yaml') | from_yaml_all }}"
-
-- name: Press enter when grafana is fully configured
-  pause:
-
 - name: Create an argocd application for webapp
   k8s:
     state: present

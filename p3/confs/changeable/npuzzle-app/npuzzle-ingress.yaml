@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: npuzzle.me
+  - host: app1.com
     http:
       paths:
       - path: /

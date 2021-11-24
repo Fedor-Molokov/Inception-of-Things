@@ -7,9 +7,9 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/Fedor-Molokov/IoT.git
+    repoURL: https://github.com/Fedor-Molokov/dmarsell-ception.git
     targetRevision: HEAD
-    path: p3/confs/changeable/apps
+    path: apps
   destination: 
     server: https://kubernetes.default.svc
 

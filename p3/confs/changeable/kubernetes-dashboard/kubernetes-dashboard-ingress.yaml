@@ -10,8 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: dashboard.me
-    http:
+  - http:
       paths:
       - path: /
         pathType: Prefix
