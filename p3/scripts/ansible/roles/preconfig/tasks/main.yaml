@@ -47,11 +47,6 @@
         append: true
       with_items: "{{ users }}"
 
-    # - name: Upgrade all packages
-    #   yum:
-    #     name: "*"
-    #     state: latest
-
     - name: Install yum utils
       yum:
         name: yum-utils
