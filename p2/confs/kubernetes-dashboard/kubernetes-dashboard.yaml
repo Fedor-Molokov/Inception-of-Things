@@ -16,7 +16,7 @@ items:
     labels:
       k8s-app: kubernetes-dashboard
     name: kubernetes-dashboard
-    namespace: kube-system
+    namespace: kubernetes-dashboard
 - apiVersion: v1
   kind: Service
   metadata:
@@ -26,7 +26,7 @@ items:
     labels:
       k8s-app: kubernetes-dashboard
     name: kubernetes-dashboard
-    namespace: kube-system
+    namespace: kubernetes-dashboard
   spec:
     ports:
     - port: 443
@@ -42,7 +42,7 @@ items:
     labels:
       k8s-app: kubernetes-dashboard
     name: kubernetes-dashboard-certs
-    namespace: kube-system
+    namespace: kubernetes-dashboard
   type: Opaque
 - apiVersion: v1
   data:
@@ -55,7 +55,7 @@ items:
     labels:
       k8s-app: kubernetes-dashboard
     name: kubernetes-dashboard-csrf
-    namespace: kube-system
+    namespace: kubernetes-dashboard
   type: Opaque
 - apiVersion: v1
   kind: Secret
@@ -66,7 +66,7 @@ items:
     labels:
       k8s-app: kubernetes-dashboard
     name: kubernetes-dashboard-key-holder
-    namespace: kube-system
+    namespace: kubernetes-dashboard
   type: Opaque
 - apiVersion: v1
   kind: ConfigMap
@@ -77,7 +77,7 @@ items:
     labels:
       k8s-app: kubernetes-dashboard
     name: kubernetes-dashboard-settings
-    namespace: kube-system
+    namespace: kubernetes-dashboard
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: Role
   metadata:
@@ -87,7 +87,7 @@ items:
     labels:
       k8s-app: kubernetes-dashboard
     name: kubernetes-dashboard
-    namespace: kube-system
+    namespace: kubernetes-dashboard
   rules:
   - apiGroups:
     - ""
@@ -159,7 +159,7 @@ items:
     labels:
       k8s-app: kubernetes-dashboard
     name: kubernetes-dashboard
-    namespace: kube-system
+    namespace: kubernetes-dashboard
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: Role
@@ -167,7 +167,7 @@ items:
   subjects:
   - kind: ServiceAccount
     name: kubernetes-dashboard
-    namespace: kube-system
+    namespace: kubernetes-dashboard
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: ClusterRoleBinding
   metadata:
@@ -182,7 +182,7 @@ items:
   subjects:
   - kind: ServiceAccount
     name: kubernetes-dashboard
-    namespace: kube-system
+    namespace: kubernetes-dashboard
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
@@ -192,7 +192,7 @@ items:
     labels:
       k8s-app: kubernetes-dashboard
     name: kubernetes-dashboard
-    namespace: kube-system
+    namespace: kubernetes-dashboard
   spec:
     replicas: 1
     revisionHistoryLimit: 10
@@ -252,7 +252,7 @@ items:
     labels:
       k8s-app: dashboard-metrics-scraper
     name: dashboard-metrics-scraper
-    namespace: kube-system
+    namespace: kubernetes-dashboard
   spec:
     ports:
     - port: 8000
@@ -268,7 +268,7 @@ items:
     labels:
       k8s-app: dashboard-metrics-scraper
     name: dashboard-metrics-scraper
-    namespace: kube-system
+    namespace: kubernetes-dashboard
   spec:
     replicas: 1
     revisionHistoryLimit: 10

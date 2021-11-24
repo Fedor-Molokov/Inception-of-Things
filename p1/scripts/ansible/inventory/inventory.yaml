@@ -2,7 +2,7 @@ k3s_cluster:
   hosts:
     dmarsellS:
       ansible_user: vagrant
-      ansible_host: 192.168.42.110
+      ansible_host: 192.168.56.110
       # ansible_python_interpreter: /usr/bin/python3
     dmarsellSW:
       ansible_user: vagrant

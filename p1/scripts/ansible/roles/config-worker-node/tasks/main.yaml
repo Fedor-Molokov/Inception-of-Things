@@ -5,7 +5,7 @@
   become: true
 
 - name: set K3S_URL env
-  shell: echo 'export K3S_URL="https://192.168.42.110:6443"' >> /etc/environment
+  shell: echo 'export K3S_URL="https://192.168.56.110:6443"' >> /etc/environment
   become: true
 
 - name: add worker node
