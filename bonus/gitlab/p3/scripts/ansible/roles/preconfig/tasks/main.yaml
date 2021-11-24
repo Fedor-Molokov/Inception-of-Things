@@ -1,0 +1,70 @@
+---
+- name: Preconfig block
+  block:
+    - name: Make sure we have a 'admin' group
+      group:
+        name: admin
+        state: present
+    
+    - name: Make sure we have a 'docker' group
+      group:
+        name: docker
+        state: present
+
+    - name: Allow 'admin' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%admin'
+        line: '%admin ALL=(ALL) NOPASSWD: ALL'
+        validate: visudo -cf %s
+
+    - name: Add users and add to admin group
+      user:
+        name: "{{ item }}"
+        groups: admin
+        password: "{{ item | password_hash('sha512') }}"
+        update_password: on_create
+        append: true
+      with_items: "{{ users }}"
+      register: change
+
+    - name: Config users passwords
+      command: chage -d 0 "{{ item }}"
+      when: change.changed
+      with_items: "{{ users }}"
+    
+    - name: Add ansible_user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: true
+    
+    - name: Add users to docker group
+      user:
+        name: "{{ item }}"
+        groups: docker
+        append: true
+      with_items: "{{ users }}"
+
+    - name: Install yum utils
+      yum:
+        name: yum-utils
+        state: latest
+
+    - name: Install device-mapper-persistent-data
+      yum:
+        name: device-mapper-persistent-data
+        state: latest
+
+    - name: Install lvm2
+      yum:
+        name: lvm2
+        state: latest
+      
+  become: true
+  when: ansible_facts['distribution'] == 'CentOS'
+  rescue:
+    - name: Some error print
+      debug:
+        var: error
