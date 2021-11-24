@@ -7,10 +7,3 @@
   command: cat /var/lib/rancher/k3s/server/node-token
   register: token
   become: true
-
-# - name: Change kubeconfig file permission
-#   file:
-#     path: /etc/rancher/k3s/k3s.yaml
-#     owner: dmarsell
-#     group: admin
-#   become: true

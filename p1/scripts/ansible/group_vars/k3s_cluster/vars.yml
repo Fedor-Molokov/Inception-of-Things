@@ -13,7 +13,6 @@ kubectl_conf:
   install_completion:   true
   ensure_prerequisites: false
 
-# k3s_server: 
 dmarsellS:
   docker: true
   disable:
@@ -21,7 +20,6 @@ dmarsellS:
   node-label:
       - "node=server"
 
-# k3s_agent:
   dmarsellSW:
     with-node-id: true
     node-label:

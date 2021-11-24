@@ -3,68 +3,13 @@
   hosts: k3s_cluster
   roles:
     - role: preconfig
-    # - role: codecap.kubectl
-    #   become: true
-    # - role: k3s-config-permission
-    # - role: xanmanning.k3s
-      # become: true
-    # - role: end
-    # - role: xanmanning.k3s
-    # - role: andrewrothstein.k3d
-
-
 
 - name: Build a cluster with a single control node
   hosts: master
-  vars:
-    # k3s_become_for_all: true
-    # k3s_become_for_kubectl: false
   roles:
-    # - role: xanmanning.k3s
     - role: config-master-node
-    # - role: k3s-config-permission
-    # - role: end
 
 - name: Build a cluster with a single control node
   hosts: worker
-  vars:
-    # k3s_become_for_all: true
-    # k3s_become_for_kubectl: false
   roles:
     - role: config-worker-node
-    # - role: k3s-config-permission
-    # - role: end
-
-
-
-
-# - name: Config master node
-#   hosts: master
-#   roles:
-#     - role: k3s/master
-
-# - name: Config worker node
-#   hosts: worker
-#   roles:
-#     - role: k3s/worker
-
-
-# ---
-
-# - hosts: k3s_cluster
-#   gather_facts: yes
-#   become: yes
-#   roles:
-#     - role: prereq
-#     - role: download
-#     - role: raspberrypi
-
-# - hosts: master
-#   become: yes
-#   roles:
-#     - role: k3s/master
-
-# - hosts: node
-#   become: yes
-#   roles:
-#     - role: k3s/node

@@ -5,11 +5,6 @@
       group:
         name: admin
         state: present
-    
-    # - name: Make sure we have a 'docker' group
-    #   group:
-    #     name: docker
-    #     state: present
 
     - name: Allow 'admin' group to have passwordless sudo
       lineinfile:
@@ -18,11 +13,6 @@
         regexp: '^%admin'
         line: '%admin ALL=(ALL) NOPASSWD: ALL'
         validate: visudo -cf %s
-    
-    # - name: Adding "{{ ansible_effective_user_id }}" to admin group
-    #   user: 
-    #     name: "{{ ansible_effective_user_id }}"
-    #     group: admin
 
     - name: Add users and add to admin group
       user:
@@ -38,39 +28,6 @@
       command: chage -d 0 "{{ item }}"
       when: change.changed
       with_items: "{{ users }}"
-    
-    # - name: Add ansible_user to docker group
-    #   user:
-    #     name: "{{ ansible_user }}"
-    #     groups: docker
-    #     append: true
-    
-    # - name: Add users to docker group
-    #   user:
-    #     name: "{{ item }}"
-    #     groups: docker
-    #     append: true
-    #   with_items: "{{ users }}"
-
-    # - name: Upgrade all packages
-    #   yum:
-    #     name: "*"
-    #     state: latest
-
-    # - name: Install yum utils
-    #   yum:
-    #     name: yum-utils
-    #     state: latest
-
-    # - name: Install device-mapper-persistent-data
-    #   yum:
-    #     name: device-mapper-persistent-data
-    #     state: latest
-
-    # - name: Install lvm2
-    #   yum:
-    #     name: lvm2
-    #     state: latest
       
   become: true
   when: ansible_facts['distribution'] == 'CentOS'
