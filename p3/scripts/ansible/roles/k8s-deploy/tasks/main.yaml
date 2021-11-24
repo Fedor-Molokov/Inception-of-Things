@@ -37,6 +37,13 @@
     kind: namespace
     state: present
 
+- name: Create dev namespace
+  k8s:
+    name: dev
+    api_version: v1
+    kind: namespace
+    state: present
+
 - name: Create a Ingress-Nginx from file
   k8s:
     state: present
@@ -51,9 +58,9 @@
     state: present
     definition: "{{ lookup('file', '../../confs/argo/argocd.yaml') | from_yaml_all }}"
 
-- name: Wait 20 seconds for argocd deploy
+- name: Wait 100 seconds for argocd deploy
   wait_for:
-    timeout: 20
+    timeout: 100
 
 - name: Create a argocd ingress from file
   k8s:
