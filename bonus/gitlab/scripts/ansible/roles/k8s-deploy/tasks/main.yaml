@@ -30,16 +30,16 @@
     kind: namespace
     state: present
 
-- name: Create kubernetes-dashboard namespace
+- name: Create dev namespace
   k8s:
-    name: kubernetes-dashboard
+    name: dev
     api_version: v1
     kind: namespace
     state: present
 
-- name: Create dev namespace
+- name: Create gitlab namespace
   k8s:
-    name: dev
+    name: gitlab
     api_version: v1
     kind: namespace
     state: present
@@ -67,6 +67,16 @@
     state: present
     definition: "{{ lookup('file', '../../confs/argo/ingress.yaml') | from_yaml_all }}"
 
+- name: Create an gitlab from file
+  k8s:
+    state: present
+    definition: "{{ lookup('file', '../../confs/gitlab/gitlab_all.yaml') | from_yaml_all }}"
+
+- name: Create a gitlab ingress from file
+  k8s:
+    state: present
+    definition: "{{ lookup('file', '../../confs/gitlab/ingress.yaml') | from_yaml_all }}"
+
 - name: Get login token from argocd
   ansible.builtin.shell: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode && echo
   register: argocd_token
@@ -77,30 +87,6 @@
 
 - name: Press enter when you entried into argocd dashboard
   pause:
-
-- name: Create an argocd application for kubernetes-dashboard
-  k8s:
-    state: present
-    definition: "{{ lookup('file', '../../confs/argo/application-k8s-dashboard.yaml') | from_yaml_all }}"
-
-- name: Press enter when kubernetes-dashboard is complete deploied
-  pause:
-
-- name: Get login token for dashboard
-  shell: kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | awk '/^admin-user-token-/{print $1}') | awk '$1=="token:"{print $2}'
-  register: dashboard_token
-
-- name: Show dashboard token
-  debug: 
-    msg: "The dashboard login token is: {{ dashboard_token.stdout_lines[0] }}"
-
-- name: Press enter when you entried into kubernetes-dashboard
-  pause:
-
-- name: Create an argocd application for webapp
-  k8s:
-    state: present
-    definition: "{{ lookup('file', '../../confs/argo/application-webapp.yaml') | from_yaml_all }}"
 
 - name: Create an argocd application for npuzzle-app
   k8s:

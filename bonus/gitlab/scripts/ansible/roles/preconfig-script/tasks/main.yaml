@@ -1,5 +1,3 @@
 ---
 - name: Preconfig script for docker installation
   script: files/docker-install.sh
-  become: true
-

@@ -1,0 +1,5 @@
+---
+- name: mount-volume
+  script: files/mount-volume.sh
+  become: true
+
