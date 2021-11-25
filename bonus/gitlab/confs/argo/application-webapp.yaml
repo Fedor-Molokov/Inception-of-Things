@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/Fedor-Molokov/dmarsell-ception.git
+    repoURL: https://gitlab.gitlab.svc.cluster.local:443/root/dmarsell-config.git
     targetRevision: HEAD
     path: apps
   destination: 
@@ -20,3 +20,10 @@ spec:
     automated:
       selfHeal: true
       prune: true
+
+
+# https://github.com/Fedor-Molokov/dmarsell-ception.git
+
+# https://gitlab.gitlab.svc.cluster.local:443/root/dmarsell-config.git
+
+# nkHKW84NqLCyvHSN
