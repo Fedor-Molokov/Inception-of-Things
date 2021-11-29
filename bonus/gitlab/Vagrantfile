@@ -1,21 +1,21 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+# # -*- mode: ruby -*-
+# # vi: set ft=ruby :
 
-# Change this with EXTREME caution
-diskDevice = '/dev/sda'
+# # Change this with EXTREME caution
+# diskDevice = '/dev/sda'
 
-# adds the listed disk to an LVM group
-addDiskToLVMScript =   <<SCRIPT
-# Pipe STDIN to fdisk
-fdisk #{diskDevice} <<EOF
-n
-p3
-2
+# # adds the listed disk to an LVM group
+# addDiskToLVMScript =   <<SCRIPT
+# # Pipe STDIN to fdisk
+# fdisk #{diskDevice} <<EOF
+# n
+# p3
+# 2
 
 
-w
-EOF
-SCRIPT
+# w
+# EOF
+# SCRIPT
 
 
 required_plugins = %w( vagrant-vbguest )
@@ -53,13 +53,13 @@ Vagrant.configure("2") do |config|
 			systemctl restart sshd.service
 			exit 0
 		  SHELL
-		  config.vm.provision "addDisk", type: "shell", inline: addDiskToLVMScript
+		#   config.vm.provision "addDisk", type: "shell", inline: addDiskToLVMScript
 		end
 
 		server.vm.provider "virtualbox" do |vb|
 			vb.name = "IoT-server"
-			vb.memory = 12288
-			vb.cpus = 8
+			vb.memory = 8000
+			vb.cpus = 4
 		end
 
 		if Vagrant.has_plugin?("vagrant-vbguest")
