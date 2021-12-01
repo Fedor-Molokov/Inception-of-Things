@@ -57,6 +57,7 @@ Vagrant.configure("2") do |config|
 		end
 
 		server.vm.provider "virtualbox" do |vb|
+			# vb.required_version = "<= 6.1.26"
 			vb.name = "IoT-server"
 			vb.memory = 8000
 			vb.cpus = 4
