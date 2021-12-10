@@ -1,6 +1,6 @@
 galaxy_info:
   author: Fedor Molokov
-  description: Reboot VM
+  description: Config k3d cluster
   license: MIT
   min_ansible_version: 2.1
   platforms:
