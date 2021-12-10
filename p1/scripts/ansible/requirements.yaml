@@ -1,4 +1,2 @@
 roles:
   - codecap.kubectl
-  # - xanmanning.k3s
-  # - andrewrothstein.k3d
