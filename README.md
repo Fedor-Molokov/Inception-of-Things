@@ -6,14 +6,13 @@
 - [ ] p1
 - k3s kubernetes cluster deployed on two nodes (one master and one worker) using vagrant and ansible
 
-[comment]: <> (![Alt text]&#40;./p1.svg&#41;)
 ![](./p1.png)
 - [ ] p2
 - k3s kubernetes cluster deployed on a single node using vagrant and ansible with automated deployment of k8s resources:
   - k8s dashboard
   - npuzzle app
   - sample UserDatabase app
-
+![](./p2.png)
 
 - [ ] p3
 - k3d kubernetes cluster deployed on a single node using vagrant and ansible with automated deployment of k8s resources
