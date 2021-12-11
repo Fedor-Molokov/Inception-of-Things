@@ -1,17 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: npuzzle-app-argo-application
+  name: kubernetes-dashboard-argo-application
   namespace: argocd
 spec:
   project: default
 
   source:
-    # repoURL: https://github.com/Fedor-Molokov/dmarsell-ception.git
-    repoURL: https://10.0.2.2:8080/root/gitlab.git
+    repoURL: https://github.com/Fedor-Molokov/dmarsell-ception.git
     targetRevision: HEAD
-    # path: npuzzle-app
-    path: ./
+    path: kubernetes-dashboard
   destination: 
     server: https://kubernetes.default.svc
 

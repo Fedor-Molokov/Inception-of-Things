@@ -2,18 +2,12 @@
 - name: All configs
   hosts: IoT-server
   roles:
-    # ************************** #
-    # For deploy gitlab into cluster
     # - role: reboot
     # - role: mount-volume
-    # ************************** #
     - role: preconfig
     - role: docker-install
     - role: reboot
-    # ************************** #
-    # For deploy gitlab into cluster
     # - role: preconfig-script
-    # ************************** #
       become: true
     - role: codecap.kubectl
       become: true

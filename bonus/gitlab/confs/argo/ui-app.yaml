@@ -1,16 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: npuzzle-app-argo-application
+  name: web-app
   namespace: argocd
 spec:
   project: default
 
   source:
-    # repoURL: https://github.com/Fedor-Molokov/dmarsell-ception.git
-    repoURL: https://10.0.2.2:8080/root/gitlab.git
+    repoURL: http://10.0.2.2:8080/root/gitlab.git
     targetRevision: HEAD
-    # path: npuzzle-app
     path: ./
   destination: 
     server: https://kubernetes.default.svc

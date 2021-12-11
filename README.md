@@ -21,7 +21,7 @@
  and CD pipeline automation using argoCD:
     - k8s dashboard
     - npuzzle app
-    - sample UserDatabase app
+    - sample app
     - argoCD
   
 ![](./p3.png)

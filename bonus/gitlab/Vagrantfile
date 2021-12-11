@@ -1,6 +1,3 @@
-# ********************************************************************** #
-# For deploy gitlab into cluster
-
 # # -*- mode: ruby -*-
 # # vi: set ft=ruby :
 
@@ -19,7 +16,6 @@
 # w
 # EOF
 # SCRIPT
-# ********************************************************************** #
 
 
 required_plugins = %w( vagrant-vbguest )
@@ -57,14 +53,10 @@ Vagrant.configure("2") do |config|
 			systemctl restart sshd.service
 			exit 0
 		  SHELL
-		# ********************************************************************** #
-		# 	For deploy gitlab into cluster
 		#   config.vm.provision "addDisk", type: "shell", inline: addDiskToLVMScript
-		# ********************************************************************** #
 		end
 
 		server.vm.provider "virtualbox" do |vb|
-			# vb.required_version = "<= 6.1.26"
 			vb.name = "IoT-server"
 			vb.memory = 8000
 			vb.cpus = 4

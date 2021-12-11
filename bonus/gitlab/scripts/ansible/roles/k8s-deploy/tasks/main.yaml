@@ -51,6 +51,11 @@
     state: present
     definition: "{{ lookup('file', '../../confs/argo/argocd.yaml') | from_yaml_all }}"
 
+- name: Create ui application
+  k8s:
+    state: present
+    definition: "{{ lookup('file', '../../confs/ui-app/ui-app.yaml') | from_yaml_all }}"
+
 - name: Wait 100 seconds for argocd deploy
   wait_for:
     timeout: 100
@@ -70,3 +75,4 @@
 
 - name: Press enter when you entried into argocd dashboard
   pause:
+

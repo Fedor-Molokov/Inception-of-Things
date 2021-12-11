@@ -1,0 +1,151 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webapp
+    tier: ui
+  name: ui-webapp
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+      tier: ui
+  template:
+    metadata:
+      labels:
+        app: webapp
+        tier: ui
+    spec:
+      containers:
+      - name: ui
+        image: dmarsell/test-ui-for-argocd:2.0.0
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: webapp
+    tier: ui
+  name: ui
+  namespace: dev
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: webapp
+    tier: ui
+    
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-webapp
+  namespace: dev
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: app2.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ui
+            port:
+              number: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webapp
+    tier: api
+  name: api-webapp
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+      tier: api
+  template:
+    metadata:
+      labels:
+        app: webapp
+        tier: api
+    spec:
+      containers:
+      - image: dmarsell/go-web-api:kuber-go-stable
+        name: api
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: webapp
+    tier: api
+  name: go-web-api
+  namespace: dev
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: webapp
+    tier: api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webapp
+    tier: database
+  name: postgres
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+      tier: database
+  template:
+    metadata:
+      labels:
+        app: webapp
+        tier: database
+    spec:
+      containers:
+      - image: postgres
+        name: postgres
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: webapp
+    tier: database
+  name: postgres
+  namespace: dev
+spec:
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: webapp
+    tier: database
+
