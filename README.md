@@ -34,6 +34,8 @@
     - sample UserDatabase app
     - argoCD
 
+![](./bonus.png)
+
 [comment]: <> (### DOCUMENTATION)
 
 [comment]: <> (#### simple vagrantfile)
