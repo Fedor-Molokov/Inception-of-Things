@@ -2,11 +2,15 @@
 - name: All configs
   hosts: IoT-server
   roles:
+    # ************************************************* #
+    # ansible roles for deploy gitlab into k3d cluster
     # - role: reboot
     # - role: mount-volume
     - role: preconfig
     - role: docker-install
     - role: reboot
+    # ************************************************* #
+    # ansible role for deploy gitlab into k3d cluster
     # - role: preconfig-script
       become: true
     - role: codecap.kubectl

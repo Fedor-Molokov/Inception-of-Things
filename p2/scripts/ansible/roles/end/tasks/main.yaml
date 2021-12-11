@@ -1,5 +1,4 @@
 ---
-
 - name: End
   block:
     - name: Reboot block

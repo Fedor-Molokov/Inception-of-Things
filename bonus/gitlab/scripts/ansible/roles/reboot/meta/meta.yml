@@ -10,4 +10,3 @@ galaxy_info:
   dependencies:
     - role: preconfig
     - role: docker-install
-    - role: andrewrothstein.k3d

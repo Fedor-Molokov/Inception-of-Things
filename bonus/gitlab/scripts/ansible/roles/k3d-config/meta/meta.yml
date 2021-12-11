@@ -1,6 +1,6 @@
 galaxy_info:
   author: Fedor Molokov
-  description: Reboot VM
+  description: Create and config k3d cluster
   license: MIT
   min_ansible_version: 2.1
   platforms:
@@ -10,4 +10,5 @@ galaxy_info:
   dependencies:
     - role: preconfig
     - role: docker-install
+    - role: reboot
     - role: andrewrothstein.k3d
